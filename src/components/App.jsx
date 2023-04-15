@@ -1,16 +1,22 @@
+// import { useState } from "react";
+// import { nanoid } from 'nanoid';
+import { Layout } from './App.styled'
+import { GlobalStyle } from './GlobalStyle';
+import { ContactForm } from './ContactForm/ContactForm';
+import { ContactList } from './ContactList/ContactList';
+import { Filter } from './Filter/Filter'
+
 export const App = () => {
-  return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101'
-      }}
-    >
-      React homework template
-    </div>
-  );
-};
+   
+    return (
+      <Layout>
+        <h1>Phonebook</h1>
+        <ContactForm />
+        <h2>Contacts</h2>
+        <Filter />
+        <ContactList />
+        <GlobalStyle />
+      </Layout>
+    );
+  }
+;
