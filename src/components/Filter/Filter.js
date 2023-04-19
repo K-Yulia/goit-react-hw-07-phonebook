@@ -1,11 +1,10 @@
 import { Box, Text, Input } from './Filter.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilter } from 'redux/filterSlice';
-import { getFilter } from 'redux/selectors';
+import { selectFilter } from 'redux/selectors';
 
 export const Filter = ({ value, onChange }) => {
-  // const contacts = useSelector(getContacts);
-  const filter = useSelector(getFilter);
+  const filter = useSelector(selectFilter);
   const dispatch = useDispatch();
 
   const onFilter = e => {
