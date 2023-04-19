@@ -2,8 +2,8 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Form, Field, Btn, ErrorMessage } from './ContactForm.styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from 'redux/contactsSlice';
-import { getContacts } from 'redux/selectors';
+import { addContact } from 'redux/operations';
+import { selectContacts } from 'redux/selectors';
 
 const ContactSchema = Yup.object().shape({
   name: Yup.string()
@@ -13,7 +13,7 @@ const ContactSchema = Yup.object().shape({
       'Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore dArtagnan'
     )
     .required('Required'),
-  number: Yup.string()
+  phone: Yup.string()
     .trim()
     .matches(
       /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/,
@@ -23,18 +23,19 @@ const ContactSchema = Yup.object().shape({
 });
 
 export const ContactForm = () => {
+  const contacts = useSelector(selectContacts);
   const dispatch = useDispatch();
-  const contacts = useSelector(getContacts);
 
   const handleSubmit = (values, { resetForm }) => {
-    const { name, number } = values;
-    const ifExist = contacts.find(contact => contact.name === name);
+    const ifExist = contacts.find(
+      contact => contact.name.toLowerCase() === values.name.toLowerCase()
+    );
 
     if (ifExist) {
-      alert(`${name}: is already in contacts`);
+      alert(`${values.name}: is already in contacts`);
       return;
     }
-    dispatch(addContact(name, number));
+    dispatch(addContact(values));
     resetForm();
   };
 
@@ -42,10 +43,12 @@ export const ContactForm = () => {
     <Formik
       initialValues={{
         name: '',
-        number: '',
+        phone: '',
       }}
       validationSchema={ContactSchema}
-      onSubmit={handleSubmit}
+      onSubmit={(values, actions) => {
+        handleSubmit(values, actions);
+      }}
     >
       <Form>
         <label>
@@ -55,8 +58,8 @@ export const ContactForm = () => {
         </label>
         <label>
           Number
-          <Field type="tel" name="number" />
-          <ErrorMessage name="number" component="div" />
+          <Field type="tel" name="phone" />
+          <ErrorMessage name="phone" component="div" />
         </label>
         <Btn type="submit">Add contact</Btn>
       </Form>
